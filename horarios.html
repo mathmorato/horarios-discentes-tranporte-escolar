@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consultar Horários - CECATE/UFG</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="data.js" defer></script>
+  <style>
+    @media print {
+      .top-nav, .panel-card button, .no-print {
+        display: none !important;
+      }
+      .main-wrapper {
+        margin: 0;
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar (White Ribbon Navbar) -->
+  <header class="top-nav">
+    <div class="nav-container">
+      <a href="index.html" class="brand-section">
+        <img src="assets/LOGO CECATE.png" alt="CECATE Centro-Oeste UFG" class="brand-logo">
+      </a>
+
+      <div class="nav-controls">
+        <div class="semester-selector-wrapper">
+          <label for="semesterSelect">Semestre:</label>
+          <select id="semesterSelect" class="semester-select" onchange="changeSemester(this.value)">
+            <!-- Dynamically populated from data.js -->
+          </select>
+        </div>
+
+        <nav class="nav-menu">
+          <a href="index.html" class="nav-link">Início</a>
+          <a href="reuniao.html" class="nav-link">Marcar Reunião</a>
+          <a href="horarios.html" class="nav-link active">Consultar Horários</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-wrapper">
+    <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h1 class="page-title">👤 Horários Individuais do Discente</h1>
+        <p class="page-subtitle">Selecione o aluno para visualizar a grade semanal completa, salas de aula e janelas livres.</p>
+      </div>
+
+      <div class="no-print" style="display: flex; gap: 0.75rem;">
+        <button class="btn btn-outline" onclick="window.print()">
+          🖨️ Imprimir Grade
+        </button>
+      </div>
+    </div>
+
+    <!-- Student Selector Dropdown -->
+    <div class="panel-card no-print" style="background: white; border-left: 5px solid var(--ufg-blue);">
+      <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+        <label for="studentSelect" style="font-weight: 700; color: var(--dark-navy); font-size: 0.95rem;">
+          Selecionar Aluno:
+        </label>
+        <select id="studentSelect" class="semester-select" style="background: #F1F5F9; color: var(--dark-navy); border: 1px solid var(--border-color); padding: 0.6rem 1rem; font-size: 0.95rem; border-radius: var(--radius-md); flex: 1; width: 100%;" onchange="onStudentChange(this.value)">
+          <!-- Dynamic options -->
+        </select>
+      </div>
+    </div>
+
+    <!-- Student Metadata Card -->
+    <div class="panel-card" id="studentProfileCard">
+      <!-- Profile details dynamically populated -->
+    </div>
+
+    <!-- Weekly Schedule Grid -->
+    <div class="panel-card">
+      <h2 class="panel-title">🗓️ Grade Semanal de Aulas e Horários Livres</h2>
+      <div class="schedule-table-wrapper">
+        <table class="schedule-table" id="studentScheduleTable">
+          <thead>
+            <tr>
+              <th style="width: 120px;">Horários</th>
+              <th>Segunda</th>
+              <th>Terça</th>
+              <th>Quarta</th>
+              <th>Quinta</th>
+              <th>Sexta</th>
+            </tr>
+          </thead>
+          <tbody id="studentScheduleBody">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Enrolled Courses List -->
+    <div class="panel-card">
+      <h2 class="panel-title">📚 Componentes Curriculares Matriculados</h2>
+      <div id="coursesListContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem;">
+        <!-- Dynamic course cards -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer (White Ribbon) -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <div class="footer-logos">
+        <img src="assets/LOGO CECATE.png" alt="CECATE Logo" style="height: 48px; object-fit: contain;">
+      </div>
+      <p>Projeto: Fortalecendo e Aprimorando as Políticas Públicas de Transporte Escolar do Brasil</p>
+      <p style="font-size: 0.78rem; color: var(--text-muted);">Universidade Federal de Goiás - Campus Aparecida de Goiânia</p>
+    </div>
+  </footer>
+
+  <script>
+    let currentStudent = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      populateSemesterSelectors();
+      loadStudentsDropdown();
+    });
+
+    function changeSemester(semKey) {
+      Database.activeSemester = semKey;
+      loadStudentsDropdown();
+    }
+
+    function loadStudentsDropdown() {
+      const select = document.getElementById("studentSelect");
+      select.innerHTML = "";
+      const students = Database.getStudents();
+
+      students.forEach(s => {
+        const opt = document.createElement("option");
+        opt.value = s.id;
+        opt.textContent = `${s.name} (Matrícula: ${s.matricula})`;
+        select.appendChild(opt);
+      });
+
+      if (students.length > 0) {
+        onStudentChange(students[0].id);
+      }
+    }
+
+    function onStudentChange(studentId) {
+      currentStudent = Database.getStudentById(studentId);
+      if (!currentStudent) return;
+
+      renderStudentProfile();
+      renderScheduleGrid();
+      renderCoursesList();
+    }
+
+    function renderStudentProfile() {
+      const card = document.getElementById("studentProfileCard");
+
+      const days = Database.days;
+      const slots = Database.timeSlots;
+      let totalSlots = days.length * slots.length;
+      let busySlots = 0;
+
+      days.forEach(d => {
+        slots.forEach(s => {
+          if (!Database.isSlotFree(currentStudent, d, s)) busySlots++;
+        });
+      });
+
+      let freeSlots = totalSlots - busySlots;
+
+      card.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--dark-navy);">${currentStudent.name}</h2>
+            <div style="display: flex; gap: 1.25rem; flex-wrap: wrap; font-size: 0.86rem; color: var(--text-muted); margin-top: 0.4rem;">
+              <span><strong>Matrícula:</strong> ${currentStudent.matricula}</span>
+              <span><strong>Curso:</strong> ${currentStudent.curso}</span>
+              <span><strong>Cidade:</strong> ${currentStudent.cidade || 'Aparecida de Goiânia'}</span>
+              <span><strong>Vínculo:</strong> ${currentStudent.vinculo || 'REGULAR'}</span>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <div style="background: var(--ufg-blue-light); color: var(--ufg-blue); padding: 0.4rem 0.75rem; border-radius: var(--radius-md); font-weight: 700; font-size: 0.82rem;">
+              📖 ${currentStudent.courses ? currentStudent.courses.length : 0} Disciplinas
+            </div>
+            <div style="background: var(--status-free-bg); color: var(--status-free-text); padding: 0.4rem 0.75rem; border-radius: var(--radius-md); font-weight: 700; font-size: 0.82rem;">
+              🟢 ${freeSlots} Janelas Livres
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderScheduleGrid() {
+      const tbody = document.getElementById("studentScheduleBody");
+      tbody.innerHTML = "";
+
+      const days = Database.days;
+      const slots = Database.timeSlots;
+
+      slots.forEach(slot => {
+        let rowHtml = `<tr><td style="font-weight: 600; color: var(--dark-navy); font-size: 0.8rem;">${slot}</td>`;
+
+        days.forEach(day => {
+          const courseInfo = currentStudent.scheduleGrid && currentStudent.scheduleGrid[day] ? currentStudent.scheduleGrid[day][slot] : null;
+
+          if (courseInfo) {
+            rowHtml += `
+              <td class="slot-busy" style="text-align: left; padding: 0.4rem;">
+                <div style="font-weight: 700; color: #B91C1C;">${courseInfo.code}</div>
+                <div style="font-weight: 600; color: var(--dark-navy); line-height: 1.2; font-size: 0.78rem;">${courseInfo.name}</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem;">📍 ${courseInfo.local}</div>
+              </td>
+            `;
+          } else {
+            rowHtml += `
+              <td class="slot-free" style="vertical-align: middle;">
+                <span style="font-size: 0.8rem;">LIVRE</span>
+              </td>
+            `;
+          }
+        });
+
+        rowHtml += `</tr>`;
+        tbody.innerHTML += rowHtml;
+      });
+    }
+
+    function renderCoursesList() {
+      const container = document.getElementById("coursesListContainer");
+      container.innerHTML = "";
+
+      if (!currentStudent.courses || currentStudent.courses.length === 0) {
+        container.innerHTML = `<p style="color: var(--text-muted);">Nenhuma disciplina cadastrada.</p>`;
+        return;
+      }
+
+      currentStudent.courses.forEach(c => {
+        const card = document.createElement("div");
+        card.style.background = "#F8FAFC";
+        card.style.border = "1px solid var(--border-color)";
+        card.style.borderRadius = "var(--radius-md)";
+        card.style.padding = "0.9rem";
+        card.style.display = "flex";
+        card.style.flexDirection = "column";
+        card.style.gap = "0.4rem";
+
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 800; color: var(--ufg-blue); font-size: 0.9rem;">${c.code}</span>
+            <span style="font-size: 0.72rem; background: #E2E8F0; padding: 0.2rem 0.5rem; border-radius: var(--radius-sm); font-weight: 600;">${c.schedule}</span>
+          </div>
+          <div style="font-weight: 700; color: var(--dark-navy); font-size: 0.9rem;">${c.name}</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted);">👨‍🏫 <strong>Docente:</strong> ${c.teacher || 'Não informado'}</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted);">📍 <strong>Local:</strong> ${c.local || 'A definir'}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marcar Reunião - CECATE/UFG</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="data.js" defer></script>
+</head>
+<body>
+
+  <!-- Top Navigation Bar (White Ribbon Navbar) -->
+  <header class="top-nav">
+    <div class="nav-container">
+      <a href="index.html" class="brand-section">
+        <img src="assets/LOGO CECATE.png" alt="CECATE Centro-Oeste UFG" class="brand-logo">
+      </a>
+
+      <div class="nav-controls">
+        <div class="semester-selector-wrapper">
+          <label for="semesterSelect">Semestre:</label>
+          <select id="semesterSelect" class="semester-select" onchange="changeSemester(this.value)">
+            <!-- Dynamically populated from data.js -->
+          </select>
+        </div>
+
+        <nav class="nav-menu">
+          <a href="index.html" class="nav-link">Início</a>
+          <a href="reuniao.html" class="nav-link active">Marcar Reunião</a>
+          <a href="horarios.html" class="nav-link">Consultar Horários</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="main-wrapper">
+    <div class="page-header">
+      <h1 class="page-title">📅 Agendamento Dinâmico de Reuniões</h1>
+      <p class="page-subtitle">
+        Selecione os alunos participantes e filtre o horário para identificar janelas de disponibilidade em comum.
+      </p>
+    </div>
+
+    <!-- Top Controls Grid: Both Cards Side-by-Side on the Same Line -->
+    <div class="horizontal-controls-grid">
+      <!-- Block 1: Selecionar Alunos -->
+      <div class="panel-card" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div class="panel-title" style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
+            <span style="font-weight: 700; color: var(--dark-navy);">👥 Selecionar Alunos</span>
+            
+            <!-- Badge Centralizado na Região Superior -->
+            <span id="selectedCountBadge" style="font-size: 0.8rem; font-weight: 700; color: var(--ufg-blue); background: var(--ufg-blue-light); padding: 0.25rem 0.75rem; border-radius: var(--radius-full);">
+              7 Alunos Selecionados
+            </span>
+
+            <div style="display: flex; gap: 0.25rem;">
+              <button class="btn btn-outline btn-sm" onclick="selectAllStudents(true)">Todos</button>
+              <button class="btn btn-outline btn-sm" onclick="selectAllStudents(false)">Limpar</button>
+            </div>
+          </div>
+
+          <div id="studentCheckboxContainer" class="student-checkbox-grid">
+            <!-- Dynamic student checkboxes rendered here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Block 2: Filtros de Reunião (Filtros Lado a Lado + Ícone do Sol em Turno Preferencial) -->
+      <div class="panel-card" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div class="panel-title">
+            <span style="display: flex; align-items: center; gap: 0.4rem;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="color: var(--dark-navy);">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+              </svg>
+              Filtros de Reunião
+            </span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+            <!-- Duração Desejada (Lado a Lado) -->
+            <div class="filter-group">
+              <span class="filter-group-title">Duração Desejada:</span>
+              <div class="radio-options-row">
+                <label class="radio-item">
+                  <input type="radio" name="durationRadio" value="1" onchange="updateAnalysis()">
+                  <span>1 Bloco (~50 min)</span>
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="durationRadio" value="2" checked onchange="updateAnalysis()">
+                  <span>2 Blocos (~1h40 min)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Turno Preferencial (Lado a Lado) -->
+            <div class="filter-group">
+              <span class="filter-group-title">Turno Preferencial:</span>
+              <div class="radio-options-row">
+                <label class="radio-item">
+                  <input type="radio" name="shiftRadio" value="ALL" checked onchange="updateAnalysis()">
+                  <span>Todos os Turnos</span>
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="shiftRadio" value="MANHA" onchange="updateAnalysis()">
+                  <span>Manhã (08:00 - 12:30)</span>
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="shiftRadio" value="TARDE" onchange="updateAnalysis()">
+                  <span>Tarde (13:10 - 18:30)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Analysis Workspace -->
+    <section style="margin-top: 1.25rem;">
+      <!-- Meeting Suggestions Section -->
+      <div class="panel-card">
+        <h3 class="panel-title">💡 Melhores Opções de Horário Sugeridas</h3>
+        <div id="suggestionsContainer" class="suggestions-grid">
+          <!-- Dynamic suggestion cards rendered here -->
+        </div>
+      </div>
+
+      <!-- Overlap Heatmap Grid -->
+      <div class="panel-card">
+        <h3 class="panel-title">📊 Matriz de Disponibilidade Semanal (Heatmap)</h3>
+        <div class="schedule-table-wrapper">
+          <table class="schedule-table" id="heatmapTable">
+            <thead>
+              <tr>
+                <th>Horário</th>
+                <th>Segunda</th>
+                <th>Terça</th>
+                <th>Quarta</th>
+                <th>Quinta</th>
+                <th>Sexta</th>
+              </tr>
+            </thead>
+            <tbody id="heatmapBody">
+              <!-- Dynamic rows rendered here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer (White Ribbon) -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <div class="footer-logos">
+        <img src="assets/LOGO CECATE.png" alt="CECATE Logo" style="height: 48px; object-fit: contain;">
+      </div>
+      <p>Projeto: Fortalecendo e Aprimorando as Políticas Públicas de Transporte Escolar do Brasil</p>
+      <p style="font-size: 0.78rem; color: var(--text-muted);">Universidade Federal de Goiás - Campus Aparecida de Goiânia</p>
+    </div>
+  </footer>
+
+  <script>
+    let selectedStudents = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      populateSemesterSelectors();
+      renderStudentCheckboxes();
+      selectAllStudents(true);
+    });
+
+    function changeSemester(semKey) {
+      Database.activeSemester = semKey;
+      renderStudentCheckboxes();
+      selectAllStudents(true);
+    }
+
+    function renderStudentCheckboxes() {
+      const container = document.getElementById("studentCheckboxContainer");
+      container.innerHTML = "";
+      const students = Database.getStudents();
+
+      students.forEach((student) => {
+        const item = document.createElement("label");
+        item.className = "checkbox-item";
+        item.innerHTML = `
+          <input type="checkbox" value="${student.id}" id="chk_${student.id}" onchange="onStudentToggle()">
+          <span class="checkbox-name">${student.name}</span>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function selectAllStudents(selectState) {
+      const students = Database.getStudents();
+      students.forEach(s => {
+        const chk = document.getElementById(`chk_${s.id}`);
+        if (chk) chk.checked = selectState;
+      });
+      onStudentToggle();
+    }
+
+    function onStudentToggle() {
+      const students = Database.getStudents();
+      selectedStudents = students.filter(s => {
+        const chk = document.getElementById(`chk_${s.id}`);
+        return chk && chk.checked;
+      });
+
+      // Update top header badge
+      const badge = document.getElementById("selectedCountBadge");
+      if (badge) {
+        badge.textContent = `${selectedStudents.length} Aluno${selectedStudents.length !== 1 ? 's' : ''} Selecionado${selectedStudents.length !== 1 ? 's' : ''}`;
+      }
+
+      updateAnalysis();
+    }
+
+    function updateAnalysis() {
+      const suggestionsContainer = document.getElementById("suggestionsContainer");
+      const heatmapBody = document.getElementById("heatmapBody");
+
+      if (selectedStudents.length === 0) {
+        suggestionsContainer.innerHTML = `<p style="color: var(--text-muted); padding: 1rem;">Selecione discentes no painel acima.</p>`;
+        heatmapBody.innerHTML = "";
+        return;
+      }
+
+      // Read radio values
+      const shiftFilterEl = document.querySelector('input[name="shiftRadio"]:checked');
+      const durationFilterEl = document.querySelector('input[name="durationRadio"]:checked');
+
+      const shiftFilter = shiftFilterEl ? shiftFilterEl.value : "ALL";
+      const duration = durationFilterEl ? parseInt(durationFilterEl.value) : 1;
+
+      const days = Database.days;
+      const timeSlots = Database.timeSlots;
+
+      let fullOverlapSlots = [];
+      let tableHtml = "";
+
+      const dayOrder = { "Segunda": 1, "Terça": 2, "Quarta": 3, "Quinta": 4, "Sexta": 5 };
+
+      // Helper function to extract start time index in timeSlots
+      const getSlotIndex = (slotStr) => {
+        const startTime = slotStr.split(' - ')[0];
+        return timeSlots.findIndex(s => s.startsWith(startTime));
+      };
+
+      days.forEach(day => {
+        timeSlots.forEach(slot => {
+          const isMorning = parseInt(slot.split(":")[0]) < 13;
+          if (shiftFilter === "MANHA" && !isMorning) return;
+          if (shiftFilter === "TARDE" && isMorning) return;
+
+          let freeCount = 0;
+          selectedStudents.forEach(student => {
+            if (Database.isSlotFree(student, day, slot)) freeCount++;
+          });
+
+          if (freeCount === selectedStudents.length) {
+            fullOverlapSlots.push({ day, slot });
+          }
+        });
+      });
+
+      // Build Heatmap table rows (by timeSlot then day for standard grid view)
+      timeSlots.forEach(slot => {
+        const isMorning = parseInt(slot.split(":")[0]) < 13;
+        if (shiftFilter === "MANHA" && !isMorning) return;
+        if (shiftFilter === "TARDE" && isMorning) return;
+
+        tableHtml += `<tr><td style="font-weight: 600; color: var(--dark-navy); font-size: 0.8rem;">${slot}</td>`;
+
+        days.forEach(day => {
+          let freeCount = 0;
+          let busyStudents = [];
+
+          selectedStudents.forEach(student => {
+            if (Database.isSlotFree(student, day, slot)) {
+              freeCount++;
+            } else {
+              busyStudents.push(student.name.split(' ')[0]);
+            }
+          });
+
+          const total = selectedStudents.length;
+          let cellClass = "";
+          let label = "";
+
+          if (freeCount === total) {
+            cellClass = "slot-overlap-full";
+            label = `🟢 100% Livre (${freeCount}/${total})`;
+          } else if (freeCount > 0) {
+            cellClass = "slot-overlap-partial";
+            label = `🟡 ${freeCount}/${total} Livres`;
+          } else {
+            cellClass = "slot-overlap-none";
+            label = `🔴 0/${total}`;
+          }
+
+          const tooltip = busyStudents.length > 0 ? `Ocupados: ${busyStudents.join(', ')}` : "Todos livres!";
+
+          tableHtml += `
+            <td class="${cellClass}" title="${tooltip}">
+              <div style="font-size: 0.85rem;">${label}</div>
+            </td>
+          `;
+        });
+
+        tableHtml += `</tr>`;
+      });
+
+      heatmapBody.innerHTML = tableHtml;
+
+      suggestionsContainer.innerHTML = "";
+      if (fullOverlapSlots.length === 0) {
+        suggestionsContainer.innerHTML = `
+          <div style="background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; padding: 1rem; border-radius: var(--radius-md); grid-column: 1 / -1;">
+            ⚠️ Não foi encontrado nenhum horário 100% livre simultâneo para todos os discentes selecionados neste turno/duração. Tente ajustar a seleção.
+          </div>
+        `;
+      } else {
+        let suggestions = [];
+
+        if (duration === 1) {
+          suggestions = fullOverlapSlots;
+        } else {
+          for (let i = 0; i < fullOverlapSlots.length - 1; i++) {
+            const curr = fullOverlapSlots[i];
+            const next = fullOverlapSlots[i + 1];
+            if (curr.day === next.day) {
+              const currIdx = timeSlots.indexOf(curr.slot);
+              const nextIdx = timeSlots.indexOf(next.slot);
+              if (nextIdx === currIdx + 1) {
+                const combinedTime = `${curr.slot.split(' - ')[0]} - ${next.slot.split(' - ')[1]}`;
+                suggestions.push({ day: curr.day, slot: combinedTime });
+              }
+            }
+          }
+        }
+
+        // Force strict sorting by Day of Week (Segunda -> Sexta) and Start Time
+        suggestions.sort((a, b) => {
+          const dayDiff = (dayOrder[a.day] || 99) - (dayOrder[b.day] || 99);
+          if (dayDiff !== 0) return dayDiff;
+          return getSlotIndex(a.slot) - getSlotIndex(b.slot);
+        });
+
+        // Display ALL available suggested slots without exception
+        suggestions.forEach(s => {
+          const card = document.createElement("div");
+          card.className = "suggestion-card";
+          card.innerHTML = `
+            <div>
+              <div class="suggestion-time">${s.day}</div>
+              <div style="font-weight: 700; color: var(--ufg-blue); font-size: 1.05rem;">${s.slot}</div>
+              <div class="suggestion-meta">✨ Todos os ${selectedStudents.length} alunos estão sem aulas.</div>
+            </div>
+          `;
+          suggestionsContainer.appendChild(card);
+        });
+      }
+    }
+  </script>
+
+</body>
+</html>

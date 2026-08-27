@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal de Horários Discentes - CECATE/UFG</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="data.js" defer></script>
+</head>
+<body>
+
+  <!-- Top Navigation Bar (White Ribbon Navbar) -->
+  <header class="top-nav">
+    <div class="nav-container">
+      <a href="index.html" class="brand-section">
+        <img src="assets/LOGO CECATE.png" alt="CECATE Centro-Oeste UFG" class="brand-logo">
+      </a>
+
+      <div class="nav-controls">
+        <div class="semester-selector-wrapper">
+          <label for="semesterSelect">Semestre:</label>
+          <select id="semesterSelect" class="semester-select" onchange="Database.activeSemester = this.value">
+            <!-- Dynamically populated from data.js -->
+          </select>
+        </div>
+
+        <nav class="nav-menu">
+          <a href="index.html" class="nav-link active">Início</a>
+          <a href="reuniao.html" class="nav-link">Marcar Reunião</a>
+          <a href="horarios.html" class="nav-link">Consultar Horários</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-wrapper">
+    <!-- Main Navigation Module Cards -->
+    <section class="cards-grid" style="margin-top: 1.5rem;">
+      <!-- Card 1: Marcar Reunião -->
+      <a href="reuniao.html" class="module-card">
+        <div>
+          <div class="card-icon yellow">
+            📅
+          </div>
+          <h2>Marcar Reunião</h2>
+          <p>
+            Selecione um ou mais alunos para encontrar instantaneamente horários livres em comum. 
+            O algoritmo cruza as agendas e sugere os melhores horários para reuniões de grupo.
+          </p>
+        </div>
+        <span class="card-action">
+          Planejar Reunião &rarr;
+        </span>
+      </a>
+
+      <!-- Card 2: Consultar Horários -->
+      <a href="horarios.html" class="module-card">
+        <div>
+          <div class="card-icon blue">
+            👤
+          </div>
+          <h2>Consultar Horários Individuais</h2>
+          <p>
+            Visualize a grade completa de aulas de cada discente, verifique salas, docentes 
+            e consulte a disponibilidade de horários livres dia a dia.
+          </p>
+        </div>
+        <span class="card-action">
+          Ver Grade do Aluno &rarr;
+        </span>
+      </a>
+    </section>
+  </main>
+
+  <!-- Footer (White Ribbon) -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <div class="footer-logos">
+        <img src="assets/LOGO CECATE.png" alt="CECATE Logo" style="height: 48px; object-fit: contain;">
+      </div>
+      <p>Projeto: Fortalecendo e Aprimorando as Políticas Públicas de Transporte Escolar do Brasil</p>
+      <p style="font-size: 0.78rem; color: var(--text-muted);">Universidade Federal de Goiás - Campus Aparecida de Goiânia</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      populateSemesterSelectors();
+    });
+  </script>
+
+</body>
+</html>
