@@ -335,17 +335,17 @@ const Database = {
                     curso: "Engenharia de Transportes",
                     vinculo: "REGULAR",
                     cidade: "Aparecida de Goiânia",
-                    codigoVerificacao: "4b1be090ed",
+                    codigoVerificacao: "3e91d08b61",
                     courses: [
                         { code: "CIT0109", name: "ASPECTOS ORGANIZACIONAIS E JURÍDICOS DOS TRANSPORTES", teacher: "MARCELO BARBOSA CESAR", local: "SALA 507 - FCT", schedule: "Ter 13:10 - 16:50" },
                         { code: "CIT0097", name: "ENGENHARIA DE TRÁFEGO 1", teacher: "RONNY MARCELO ALIAGA MEDRANO", local: "Lab. Desenvolvimento em Transportes (LDT)", schedule: "Qua 08:00 - 11:40" },
-                        { code: "IFI0001", name: "FÍSICA III", teacher: "MARCIO ADRIANO RODRIGUES SOUZA", local: "Sala 203, CAA, CAS, Goiânia", schedule: "Ter/Qui 08:00 - 09:40" },
-                        { code: "INF0111", name: "INTRODUÇÃO À COMPUTAÇÃO", teacher: "LEANDRO LUIS GALDINO DE OLIVEIRA", local: "Sala 3N45 / 104 CAA", schedule: "Seg/Qui 20:30 - 22:00" },
-                        { code: "CIT0557", name: "INTRODUÇÃO À INTELIGÊNCIA ARTIFICIAL GENERATIVA", teacher: "MARCOS PAULINO RORIZ JUNIOR", local: "Presencial UFG Aparecida - Sala 303 (Lab.Inf)", schedule: "Seg/Ter 10:00 - 11:40" },
-                        { code: "CIT0505", name: "MATERIAIS DE CONSTRUÇÃO", teacher: "GEORGE WILTON ALBUQUERQUE RANGEL", local: "Sala 308 - FCT, Campus Aparecida", schedule: "Qua 13:10 - 14:50" },
-                        { code: "FAL1806", name: "PORTUGUÊS BÁSICO B", teacher: "ALLICE TOLEDO LIMA DA SILVEIRA", local: "Samambaia", schedule: "A definir" },
+                        { code: "IFI0325", name: "FÍSICA III", teacher: "DANIEL LOPO DA SILVA", local: "208 CAP", schedule: "Ter/Sex 08:00 - 09:40" },
+                        { code: "INF0111", name: "INTRODUÇÃO À COMPUTAÇÃO", teacher: "LEANDRO LUIS GALDINO DE OLIVEIRA", local: "3N45, 154 INF / 5N45, 104 CAA CAS Goiânia", schedule: "Ter/Qui 20:30 - 22:00" },
+                        { code: "CIT0557", name: "INTRODUÇÃO À INTELIGÊNCIA ARTIFICIAL GENERATIVA", teacher: "MARCOS PAULINO RORIZ JUNIOR", local: "Presencial na UFG Aparecida de Goiânia - Sala 303 (Lab.Inf)", schedule: "Seg/Ter 10:00 - 11:40" },
+                        { code: "CIT0505", name: "MATERIAIS DE CONSTRUÇÃO", teacher: "GEORGE WILTON ALBUQUERQUE RANGEL", local: "Sala 308 - FCT, Campus Aparecida de Goiânia", schedule: "Qua 13:10 - 14:50" },
+                        { code: "FAL1806", name: "PORTUGUÊS BÁSICO B", teacher: "ALLICE TOLEDO LIMA DA SILVEIRA", local: "SAMAMBAIA", schedule: "A definir" },
                         { code: "CIT0137", name: "PROJETO DE TERMINAIS DE PASSAGEIROS", teacher: "RODRIGO PINHEIRO TOFFANO PEREIRA", local: "Sala de Desenho - 109 - FCT/Aparecida", schedule: "Qui 13:10 - 16:50" },
-                        { code: "CIT0101", name: "TECNOLOGIA FERROVIÁRIA", teacher: "GEORGE WILTON ALBUQUERQUE RANGEL", local: "Sala 308 - FCT, Campus Aparecida", schedule: "Qua 14:50 - 16:50" }
+                        { code: "CIT0101", name: "TECNOLOGIA FERROVIÁRIA", teacher: "GEORGE WILTON ALBUQUERQUE RANGEL", local: "Sala 308 - FCT, Campus Aparecida de Goiânia", schedule: "Qua 14:50 - 16:50" }
                     ],
                     scheduleGrid: {
                         "Segunda": {
@@ -353,8 +353,8 @@ const Database = {
                             "10:50 - 11:40": { code: "CIT0557", name: "IA GENERATIVA", teacher: "MARCOS PAULINO RORIZ JUNIOR", local: "Sala 303 Lab.Inf" }
                         },
                         "Terça": {
-                            "08:00 - 08:50": { code: "IFI0001", name: "FÍSICA III", teacher: "MARCIO ADRIANO RODRIGUES SOUZA", local: "Sala 203 CAA" },
-                            "08:50 - 09:40": { code: "IFI0001", name: "FÍSICA III", teacher: "MARCIO ADRIANO RODRIGUES SOUZA", local: "Sala 203 CAA" },
+                            "08:00 - 08:50": { code: "IFI0325", name: "FÍSICA III", teacher: "DANIEL LOPO DA SILVA", local: "Sala 208 CAP" },
+                            "08:50 - 09:40": { code: "IFI0325", name: "FÍSICA III", teacher: "DANIEL LOPO DA SILVA", local: "Sala 208 CAP" },
                             "10:00 - 10:50": { code: "CIT0557", name: "IA GENERATIVA", teacher: "MARCOS PAULINO RORIZ JUNIOR", local: "Sala 303 Lab.Inf" },
                             "10:50 - 11:40": { code: "CIT0557", name: "IA GENERATIVA", teacher: "MARCOS PAULINO RORIZ JUNIOR", local: "Sala 303 Lab.Inf" },
                             "13:10 - 14:00": { code: "CIT0109", name: "ASPECTOS JURÍDICOS DOS TRANSPORTES", teacher: "MARCELO BARBOSA CESAR", local: "SALA 507 - FCT" },
@@ -373,12 +373,14 @@ const Database = {
                             "16:00 - 16:50": { code: "CIT0101", name: "TECNOLOGIA FERROVIÁRIA", teacher: "GEORGE WILTON ALBUQUERQUE RANGEL", local: "Sala 308 - FCT" }
                         },
                         "Quinta": {
-                            "08:00 - 08:50": { code: "IFI0001", name: "FÍSICA III", teacher: "MARCIO ADRIANO RODRIGUES SOUZA", local: "Sala 203 CAA" },
-                            "08:50 - 09:40": { code: "IFI0001", name: "FÍSICA III", teacher: "MARCIO ADRIANO RODRIGUES SOUZA", local: "Sala 203 CAA" },
                             "13:10 - 14:00": { code: "CIT0137", name: "PROJETO DE TERMINAIS", teacher: "RODRIGO PINHEIRO TOFFANO PEREIRA", local: "Sala de Desenho - 109" },
                             "14:00 - 14:50": { code: "CIT0137", name: "PROJETO DE TERMINAIS", teacher: "RODRIGO PINHEIRO TOFFANO PEREIRA", local: "Sala de Desenho - 109" },
                             "14:50 - 15:40": { code: "CIT0137", name: "PROJETO DE TERMINAIS", teacher: "RODRIGO PINHEIRO TOFFANO PEREIRA", local: "Sala de Desenho - 109" },
                             "16:00 - 16:50": { code: "CIT0137", name: "PROJETO DE TERMINAIS", teacher: "RODRIGO PINHEIRO TOFFANO PEREIRA", local: "Sala de Desenho - 109" }
+                        },
+                        "Sexta": {
+                            "08:00 - 08:50": { code: "IFI0325", name: "FÍSICA III", teacher: "DANIEL LOPO DA SILVA", local: "Sala 208 CAP" },
+                            "08:50 - 09:40": { code: "IFI0325", name: "FÍSICA III", teacher: "DANIEL LOPO DA SILVA", local: "Sala 208 CAP" }
                         }
                     }
                 }
