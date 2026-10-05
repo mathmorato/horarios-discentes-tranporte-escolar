@@ -4,7 +4,11 @@
  * Permite inserção simples de novos semestres (ex: 2027.1) e consulta dinâmica.
  */
 
+const CECATE_VERSION = "v.1.1.0";
+const APP_VERSION = CECATE_VERSION;
+
 const Database = {
+    version: CECATE_VERSION,
     activeSemester: "2026.2",
     
     semesters: {
@@ -403,6 +407,21 @@ const Database = {
         "17:40 - 18:30"
     ],
     
+    // Master slot definitions with exact boundaries and shifts
+    slotDefinitions: [
+        { id: "08:00 - 08:50", shift: "MANHA", startMin: 480, endMin: 530 },
+        { id: "08:50 - 09:40", shift: "MANHA", startMin: 530, endMin: 580 },
+        { id: "10:00 - 10:50", shift: "MANHA", startMin: 600, endMin: 650 },
+        { id: "10:50 - 11:40", shift: "MANHA", startMin: 650, endMin: 700 },
+        { id: "11:40 - 12:30", shift: "MANHA", startMin: 700, endMin: 750 },
+        { id: "13:10 - 14:00", shift: "TARDE", startMin: 790, endMin: 840 },
+        { id: "14:00 - 14:50", shift: "TARDE", startMin: 840, endMin: 890 },
+        { id: "14:50 - 15:40", shift: "TARDE", startMin: 890, endMin: 940 },
+        { id: "16:00 - 16:50", shift: "TARDE", startMin: 960, endMin: 1010 },
+        { id: "16:50 - 17:40", shift: "TARDE", startMin: 1010, endMin: 1060 },
+        { id: "17:40 - 18:30", shift: "TARDE", startMin: 1060, endMin: 1110 }
+    ],
+
     days: ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"],
 
     // Helper functions for Semester Management
@@ -433,6 +452,84 @@ const Database = {
             label: label,
             students: studentsArray
         };
+    },
+
+    minToTime(m) {
+        const h = Math.floor(m / 60).toString().padStart(2, '0');
+        const min = (m % 60).toString().padStart(2, '0');
+        return `${h}:${min}`;
+    },
+
+    formatDuration(minutes) {
+        if (minutes < 60) return `${minutes} min`;
+        const h = Math.floor(minutes / 60);
+        const m = minutes % 60;
+        return m === 0 ? `${h}h00` : `${h}h${m.toString().padStart(2, '0')} min`;
+    },
+
+    findMeetingSuggestions(selectedStudents, durationMinutes, shiftFilter = "ALL") {
+        if (!selectedStudents || selectedStudents.length === 0) return [];
+        const days = this.days;
+        const suggestions = [];
+
+        days.forEach(day => {
+            ["MANHA", "TARDE"].forEach(shift => {
+                if (shiftFilter === "MANHA" && shift !== "MANHA") return;
+                if (shiftFilter === "TARDE" && shift !== "TARDE") return;
+
+                const shiftSlots = this.slotDefinitions.filter(s => s.shift === shift);
+                
+                let currentBlock = null;
+                const freeBlocks = [];
+
+                shiftSlots.forEach(s => {
+                    const isFree = selectedStudents.every(st => this.isSlotFree(st, day, s.id));
+                    if (isFree) {
+                        if (!currentBlock) {
+                            currentBlock = { startMin: s.startMin, endMin: s.endMin, slots: [s] };
+                        } else {
+                            currentBlock.endMin = s.endMin;
+                            currentBlock.slots.push(s);
+                        }
+                    } else {
+                        if (currentBlock) {
+                            freeBlocks.push(currentBlock);
+                            currentBlock = null;
+                        }
+                    }
+                });
+                if (currentBlock) freeBlocks.push(currentBlock);
+
+                freeBlocks.forEach(block => {
+                    const blockDuration = block.endMin - block.startMin;
+                    if (blockDuration >= durationMinutes) {
+                        block.slots.forEach(s => {
+                            if (s.startMin + durationMinutes <= block.endMin) {
+                                suggestions.push({
+                                    day: day,
+                                    slot: s.id,
+                                    startTime: this.minToTime(s.startMin),
+                                    endTime: this.minToTime(s.startMin + durationMinutes),
+                                    windowStart: this.minToTime(block.startMin),
+                                    windowEnd: this.minToTime(block.endMin),
+                                    windowDuration: blockDuration,
+                                    durationMinutes: durationMinutes
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+        const dayOrder = { "Segunda": 1, "Terça": 2, "Quarta": 3, "Quinta": 4, "Sexta": 5 };
+        suggestions.sort((a, b) => {
+            const dayDiff = (dayOrder[a.day] || 99) - (dayOrder[b.day] || 99);
+            if (dayDiff !== 0) return dayDiff;
+            return a.startTime.localeCompare(b.startTime);
+        });
+
+        return suggestions;
     }
 };
 

@@ -718,3 +718,94 @@ body {
     min-width: 100% !important;
   }
 }
+
+/* ==========================================================================
+   Duration Filter Controls & Custom Stepper
+   ========================================================================== */
+.duration-stepper-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: #F1F5F9;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  transition: var(--transition-fast);
+}
+
+.duration-stepper-box:focus-within {
+  border-color: var(--ufg-blue);
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15);
+}
+
+.duration-step-btn {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--dark-navy);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: var(--transition-fast);
+  user-select: none;
+}
+
+.duration-step-btn:hover {
+  background: var(--cecate-yellow-light);
+  border-color: var(--cecate-yellow);
+  color: var(--cecate-yellow-hover);
+}
+
+.duration-step-btn:active {
+  transform: scale(0.95);
+}
+
+.duration-stepper-box input[type="number"] {
+  width: 46px;
+  text-align: center;
+  border: none;
+  background: transparent;
+  font-weight: 700;
+  color: var(--ufg-blue);
+  font-size: 0.92rem;
+  font-family: inherit;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.duration-stepper-box input[type="number"]::-webkit-outer-spin-button,
+.duration-stepper-box input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.duration-unit {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  user-select: none;
+  margin-right: 0.15rem;
+}
+
+/* Version badge in footer */
+.version-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--ufg-blue);
+  background: var(--ufg-blue-light);
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-full);
+  margin-top: 0.5rem;
+}
+

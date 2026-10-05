@@ -80,17 +80,41 @@
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 0.65rem;">
-            <!-- Duração Desejada (Lado a Lado) -->
+            <!-- Duração da Reunião (Presets + Campo Customizado de Minutos) -->
             <div class="filter-group">
-              <span class="filter-group-title">Duração Desejada:</span>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem; flex-wrap: wrap; gap: 0.4rem;">
+                <span class="filter-group-title" style="margin-bottom: 0;">⏱️ Duração da Reunião:</span>
+                <div class="duration-stepper-box" title="Ajuste fino da duração em minutos">
+                  <button type="button" class="duration-step-btn" onclick="stepDuration(-15)" title="Diminuir 15 min" aria-label="Diminuir 15 minutos">−</button>
+                  <input type="number" id="meetingDurationInput" min="15" max="360" step="5" value="60" oninput="onCustomDurationInput(this.value)" onchange="onCustomDurationChange(this.value)" aria-label="Duração em minutos">
+                  <span class="duration-unit">min</span>
+                  <button type="button" class="duration-step-btn" onclick="stepDuration(15)" title="Aumentar 15 min" aria-label="Aumentar 15 minutos">+</button>
+                </div>
+              </div>
               <div class="radio-options-row">
                 <label class="radio-item">
-                  <input type="radio" name="durationRadio" value="1" onchange="updateAnalysis()">
-                  <span>1 Bloco (~50 min)</span>
+                  <input type="radio" name="durationPreset" value="30" onchange="setDurationPreset(30)">
+                  <span>30 min</span>
                 </label>
                 <label class="radio-item">
-                  <input type="radio" name="durationRadio" value="2" checked onchange="updateAnalysis()">
-                  <span>2 Blocos (~1h40 min)</span>
+                  <input type="radio" name="durationPreset" value="45" onchange="setDurationPreset(45)">
+                  <span>45 min</span>
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="durationPreset" value="60" checked onchange="setDurationPreset(60)">
+                  <span>1h (60 min)</span>
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="durationPreset" value="90" onchange="setDurationPreset(90)">
+                  <span>1h30 (90 min)</span>
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="durationPreset" value="120" onchange="setDurationPreset(120)">
+                  <span>2h (120 min)</span>
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="durationPreset" value="custom" id="presetCustomRadio" onchange="selectCustomPreset()">
+                  <span>Outro...</span>
                 </label>
               </div>
             </div>
@@ -160,6 +184,7 @@
       </div>
       <p>Projeto: Fortalecendo e Aprimorando as Políticas Públicas de Transporte Escolar do Brasil</p>
       <p style="font-size: 0.78rem; color: var(--text-muted);">Universidade Federal de Goiás - Campus Aparecida de Goiânia</p>
+      <div class="version-tag">Versão <span id="appVersion">v.1.1.0</span></div>
     </div>
   </footer>
 
@@ -219,53 +244,83 @@
       updateAnalysis();
     }
 
+    let currentDurationMinutes = 60;
+
+    function setDurationPreset(mins) {
+      currentDurationMinutes = parseInt(mins);
+      const input = document.getElementById("meetingDurationInput");
+      if (input) input.value = currentDurationMinutes;
+      updateAnalysis();
+    }
+
+    function stepDuration(delta) {
+      let val = (currentDurationMinutes || 60) + delta;
+      if (val < 15) val = 15;
+      if (val > 360) val = 360;
+      setDurationValue(val);
+    }
+
+    function onCustomDurationInput(val) {
+      const parsed = parseInt(val);
+      if (!isNaN(parsed) && parsed >= 15 && parsed <= 360) {
+        currentDurationMinutes = parsed;
+        syncPresetRadios(parsed);
+        updateAnalysis();
+      }
+    }
+
+    function onCustomDurationChange(val) {
+      let parsed = parseInt(val);
+      if (isNaN(parsed) || parsed < 15) parsed = 15;
+      if (parsed > 360) parsed = 360;
+      setDurationValue(parsed);
+    }
+
+    function setDurationValue(val) {
+      currentDurationMinutes = val;
+      const input = document.getElementById("meetingDurationInput");
+      if (input) input.value = val;
+      syncPresetRadios(val);
+      updateAnalysis();
+    }
+
+    function syncPresetRadios(val) {
+      const matchingRadio = document.querySelector(`input[name="durationPreset"][value="${val}"]`);
+      if (matchingRadio) {
+        matchingRadio.checked = true;
+      } else {
+        const customRadio = document.getElementById("presetCustomRadio");
+        if (customRadio) customRadio.checked = true;
+      }
+    }
+
+    function selectCustomPreset() {
+      const input = document.getElementById("meetingDurationInput");
+      if (input) {
+        input.focus();
+        input.select();
+      }
+      updateAnalysis();
+    }
+
     function updateAnalysis() {
       const suggestionsContainer = document.getElementById("suggestionsContainer");
       const heatmapBody = document.getElementById("heatmapBody");
 
       if (selectedStudents.length === 0) {
-        suggestionsContainer.innerHTML = `<p style="color: var(--text-muted); padding: 1rem;">Selecione discentes no painel acima.</p>`;
+        suggestionsContainer.innerHTML = `<p style="color: var(--text-muted); padding: 1rem;">Selecione discentes no painel acima para encontrar horários em comum.</p>`;
         heatmapBody.innerHTML = "";
         return;
       }
 
-      // Read radio values
+      // Read filter values
       const shiftFilterEl = document.querySelector('input[name="shiftRadio"]:checked');
-      const durationFilterEl = document.querySelector('input[name="durationRadio"]:checked');
-
       const shiftFilter = shiftFilterEl ? shiftFilterEl.value : "ALL";
-      const duration = durationFilterEl ? parseInt(durationFilterEl.value) : 1;
+      const duration = currentDurationMinutes || 60;
 
       const days = Database.days;
       const timeSlots = Database.timeSlots;
-
-      let fullOverlapSlots = [];
       let tableHtml = "";
-
-      const dayOrder = { "Segunda": 1, "Terça": 2, "Quarta": 3, "Quinta": 4, "Sexta": 5 };
-
-      // Helper function to extract start time index in timeSlots
-      const getSlotIndex = (slotStr) => {
-        const startTime = slotStr.split(' - ')[0];
-        return timeSlots.findIndex(s => s.startsWith(startTime));
-      };
-
-      days.forEach(day => {
-        timeSlots.forEach(slot => {
-          const isMorning = parseInt(slot.split(":")[0]) < 13;
-          if (shiftFilter === "MANHA" && !isMorning) return;
-          if (shiftFilter === "TARDE" && isMorning) return;
-
-          let freeCount = 0;
-          selectedStudents.forEach(student => {
-            if (Database.isSlotFree(student, day, slot)) freeCount++;
-          });
-
-          if (freeCount === selectedStudents.length) {
-            fullOverlapSlots.push({ day, slot });
-          }
-        });
-      });
 
       // Build Heatmap table rows (by timeSlot then day for standard grid view)
       timeSlots.forEach(slot => {
@@ -316,49 +371,52 @@
 
       heatmapBody.innerHTML = tableHtml;
 
+      // Calculate and display dynamic meeting suggestions
+      const suggestions = Database.findMeetingSuggestions(selectedStudents, duration, shiftFilter);
+
       suggestionsContainer.innerHTML = "";
-      if (fullOverlapSlots.length === 0) {
+      if (suggestions.length === 0) {
         suggestionsContainer.innerHTML = `
-          <div style="background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; padding: 1rem; border-radius: var(--radius-md); grid-column: 1 / -1;">
-            ⚠️ Não foi encontrado nenhum horário 100% livre simultâneo para todos os discentes selecionados neste turno/duração. Tente ajustar a seleção.
+          <div style="background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; padding: 1.15rem; border-radius: var(--radius-md); grid-column: 1 / -1; line-height: 1.5;">
+            ⚠️ Não foi encontrado nenhum horário 100% livre simultâneo com duração mínima de <strong>${Database.formatDuration(duration)}</strong> para os discentes selecionados neste turno (${shiftFilter === "ALL" ? "Todos os Turnos" : shiftFilter === "MANHA" ? "Manhã" : "Tarde"}).
+            <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #78350F;">
+              💡 <strong>Dica:</strong> Experimente reduzir a duração da reunião (ex: 30 ou 45 min) ou ajustar a seleção de discentes no painel acima.
+            </div>
           </div>
         `;
       } else {
-        let suggestions = [];
-
-        if (duration === 1) {
-          suggestions = fullOverlapSlots;
-        } else {
-          for (let i = 0; i < fullOverlapSlots.length - 1; i++) {
-            const curr = fullOverlapSlots[i];
-            const next = fullOverlapSlots[i + 1];
-            if (curr.day === next.day) {
-              const currIdx = timeSlots.indexOf(curr.slot);
-              const nextIdx = timeSlots.indexOf(next.slot);
-              if (nextIdx === currIdx + 1) {
-                const combinedTime = `${curr.slot.split(' - ')[0]} - ${next.slot.split(' - ')[1]}`;
-                suggestions.push({ day: curr.day, slot: combinedTime });
-              }
-            }
-          }
-        }
-
-        // Force strict sorting by Day of Week (Segunda -> Sexta) and Start Time
-        suggestions.sort((a, b) => {
-          const dayDiff = (dayOrder[a.day] || 99) - (dayOrder[b.day] || 99);
-          if (dayDiff !== 0) return dayDiff;
-          return getSlotIndex(a.slot) - getSlotIndex(b.slot);
-        });
-
-        // Display ALL available suggested slots without exception
         suggestions.forEach(s => {
           const card = document.createElement("div");
           card.className = "suggestion-card";
+
+          let windowFlexText = "";
+          if (s.windowDuration > duration) {
+            windowFlexText = `
+              <div style="font-size: 0.76rem; color: #047857; margin-top: 0.25rem;">
+                📌 <strong>Janela livre total:</strong> ${s.windowStart} às ${s.windowEnd} (${Database.formatDuration(s.windowDuration)} livres)
+              </div>
+            `;
+          } else {
+            windowFlexText = `
+              <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 0.25rem;">
+                📌 <strong>Janela livre:</strong> ${s.windowStart} às ${s.windowEnd}
+              </div>
+            `;
+          }
+
           card.innerHTML = `
             <div>
-              <div class="suggestion-time">${s.day}</div>
-              <div style="font-weight: 700; color: var(--ufg-blue); font-size: 1.05rem;">${s.slot}</div>
-              <div class="suggestion-meta">✨ Todos os ${selectedStudents.length} alunos estão sem aulas.</div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                <span class="suggestion-time">${s.day}</span>
+                <span style="font-size: 0.75rem; font-weight: 700; color: #065F46; background: #D1FAE5; padding: 0.15rem 0.5rem; border-radius: var(--radius-full);">
+                  ⏱️ ${Database.formatDuration(duration)}
+                </span>
+              </div>
+              <div style="font-weight: 800; color: var(--ufg-blue); font-size: 1.15rem; letter-spacing: -0.02em;">
+                ${s.startTime} - ${s.endTime}
+              </div>
+              ${windowFlexText}
+              <div class="suggestion-meta" style="margin-top: 0.35rem;">✨ Todos os ${selectedStudents.length} alunos livres</div>
             </div>
           `;
           suggestionsContainer.appendChild(card);
