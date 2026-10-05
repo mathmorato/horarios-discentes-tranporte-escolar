@@ -4,7 +4,7 @@
  * Permite inserção simples de novos semestres (ex: 2027.1) e consulta dinâmica.
  */
 
-const CECATE_VERSION = "v.1.1.2";
+const CECATE_VERSION = "v.1.1.3";
 const APP_VERSION = CECATE_VERSION;
 
 const Database = {
@@ -385,6 +385,67 @@ const Database = {
                         "Sexta": {
                             "08:00 - 08:50": { code: "IFI0325", name: "FÍSICA III", teacher: "DANIEL LOPO DA SILVA", local: "Sala 208 CAP" },
                             "08:50 - 09:40": { code: "IFI0325", name: "FÍSICA III", teacher: "DANIEL LOPO DA SILVA", local: "Sala 208 CAP" }
+                        }
+                    }
+                },
+
+                {
+                    id: "student_8",
+                    name: "Yasmim Queiroz da Silva",
+                    matricula: "202505140",
+                    curso: "Engenharia de Transportes",
+                    vinculo: "REGULAR",
+                    cidade: "Aparecida de Goiânia",
+                    codigoVerificacao: "c5720ab1f3",
+                    courses: [
+                        { code: "IME0356", name: "CÁLCULO 2A", teacher: "MAYK JOAQUIM DOS SANTOS", local: "208, FCT, CAP, Aparecida de Goiânia", schedule: "Seg/Qua/Sex 13:10 - 14:50" },
+                        { code: "CIT0506", name: "EMPREENDEDORISMO EM TRANSPORTES", teacher: "ALEXANDRE DUARTE", local: "SALA 507 - FCT/Aparecida de Goiânia", schedule: "Ter 08:00 - 11:40" },
+                        { code: "IFI0203", name: "FÍSICA I", teacher: "DANIEL LOPO DA SILVA", local: "Terça: sala 108 / Sexta: sala 504", schedule: "Ter/Sex 14:50 - 16:50" },
+                        { code: "IME0345", name: "GEOMETRIA ANALÍTICA", teacher: "MAX VALERIO LEMES", local: "208, FCT, CAP, Aparecida de Goiânia", schedule: "Seg/Qua 10:00 - 11:40" },
+                        { code: "CIT0507", name: "GEOPROCESSAMENTO", teacher: "GERSON DOS SANTOS LISBOA", local: "SALA 304 - Lab. Informática - FCT", schedule: "Qui 13:10 - 16:50" },
+                        { code: "IME0378", name: "PROBABILIDADE E ESTATÍSTICA A", teacher: "JOELMIR DIVINO CARLOS FELICIANO", local: "505, FCT, CAP, Aparecida de Goiânia", schedule: "Seg/Qua 14:50 - 16:50" },
+                        { code: "CIT0387", name: "TOPOGRAFIA", teacher: "GERSON DOS SANTOS LISBOA", local: "LABORATÓRIO DE INFORMÁTICA 1- 3o ANDAR - FCT/Aparecida", schedule: "Sex 08:00 - 11:40" }
+                    ],
+                    scheduleGrid: {
+                        "Segunda": {
+                            "10:00 - 10:50": { code: "IME0345", name: "GEOMETRIA ANALÍTICA", teacher: "MAX VALERIO LEMES", local: "Sala 208 - FCT" },
+                            "10:50 - 11:40": { code: "IME0345", name: "GEOMETRIA ANALÍTICA", teacher: "MAX VALERIO LEMES", local: "Sala 208 - FCT" },
+                            "13:10 - 14:00": { code: "IME0356", name: "CÁLCULO 2A", teacher: "MAYK JOAQUIM DOS SANTOS", local: "Sala 208 - FCT" },
+                            "14:00 - 14:50": { code: "IME0356", name: "CÁLCULO 2A", teacher: "MAYK JOAQUIM DOS SANTOS", local: "Sala 208 - FCT" },
+                            "14:50 - 15:40": { code: "IME0378", name: "PROBABILIDADE E ESTATÍSTICA A", teacher: "JOELMIR DIVINO CARLOS FELICIANO", local: "Sala 505 - FCT" },
+                            "16:00 - 16:50": { code: "IME0378", name: "PROBABILIDADE E ESTATÍSTICA A", teacher: "JOELMIR DIVINO CARLOS FELICIANO", local: "Sala 505 - FCT" }
+                        },
+                        "Terça": {
+                            "08:00 - 08:50": { code: "CIT0506", name: "EMPREENDEDORISMO EM TRANSPORTES", teacher: "ALEXANDRE DUARTE", local: "Sala 507 - FCT" },
+                            "08:50 - 09:40": { code: "CIT0506", name: "EMPREENDEDORISMO EM TRANSPORTES", teacher: "ALEXANDRE DUARTE", local: "Sala 507 - FCT" },
+                            "10:00 - 10:50": { code: "CIT0506", name: "EMPREENDEDORISMO EM TRANSPORTES", teacher: "ALEXANDRE DUARTE", local: "Sala 507 - FCT" },
+                            "10:50 - 11:40": { code: "CIT0506", name: "EMPREENDEDORISMO EM TRANSPORTES", teacher: "ALEXANDRE DUARTE", local: "Sala 507 - FCT" },
+                            "14:50 - 15:40": { code: "IFI0203", name: "FÍSICA I", teacher: "DANIEL LOPO DA SILVA", local: "Sala 108" },
+                            "16:00 - 16:50": { code: "IFI0203", name: "FÍSICA I", teacher: "DANIEL LOPO DA SILVA", local: "Sala 108" }
+                        },
+                        "Quarta": {
+                            "10:00 - 10:50": { code: "IME0345", name: "GEOMETRIA ANALÍTICA", teacher: "MAX VALERIO LEMES", local: "Sala 208 - FCT" },
+                            "10:50 - 11:40": { code: "IME0345", name: "GEOMETRIA ANALÍTICA", teacher: "MAX VALERIO LEMES", local: "Sala 208 - FCT" },
+                            "13:10 - 14:00": { code: "IME0356", name: "CÁLCULO 2A", teacher: "MAYK JOAQUIM DOS SANTOS", local: "Sala 208 - FCT" },
+                            "14:00 - 14:50": { code: "IME0356", name: "CÁLCULO 2A", teacher: "MAYK JOAQUIM DOS SANTOS", local: "Sala 208 - FCT" },
+                            "14:50 - 15:40": { code: "IME0378", name: "PROBABILIDADE E ESTATÍSTICA A", teacher: "JOELMIR DIVINO CARLOS FELICIANO", local: "Sala 505 - FCT" },
+                            "16:00 - 16:50": { code: "IME0378", name: "PROBABILIDADE E ESTATÍSTICA A", teacher: "JOELMIR DIVINO CARLOS FELICIANO", local: "Sala 505 - FCT" }
+                        },
+                        "Quinta": {
+                            "13:10 - 14:00": { code: "CIT0507", name: "GEOPROCESSAMENTO", teacher: "GERSON DOS SANTOS LISBOA", local: "Lab. Informática 304 - FCT" },
+                            "14:00 - 14:50": { code: "CIT0507", name: "GEOPROCESSAMENTO", teacher: "GERSON DOS SANTOS LISBOA", local: "Lab. Informática 304 - FCT" },
+                            "14:50 - 15:40": { code: "CIT0507", name: "GEOPROCESSAMENTO", teacher: "GERSON DOS SANTOS LISBOA", local: "Lab. Informática 304 - FCT" },
+                            "16:00 - 16:50": { code: "CIT0507", name: "GEOPROCESSAMENTO", teacher: "GERSON DOS SANTOS LISBOA", local: "Lab. Informática 304 - FCT" }
+                        },
+                        "Sexta": {
+                            "08:00 - 08:50": { code: "CIT0387", name: "TOPOGRAFIA", teacher: "GERSON DOS SANTOS LISBOA", local: "Lab. Informática 1 - 3º Andar" },
+                            "08:50 - 09:40": { code: "CIT0387", name: "TOPOGRAFIA", teacher: "GERSON DOS SANTOS LISBOA", local: "Lab. Informática 1 - 3º Andar" },
+                            "10:00 - 10:50": { code: "CIT0387", name: "TOPOGRAFIA", teacher: "GERSON DOS SANTOS LISBOA", local: "Lab. Informática 1 - 3º Andar" },
+                            "10:50 - 11:40": { code: "CIT0387", name: "TOPOGRAFIA", teacher: "GERSON DOS SANTOS LISBOA", local: "Lab. Informática 1 - 3º Andar" },
+                            "13:10 - 14:00": { code: "IME0356", name: "CÁLCULO 2A", teacher: "MAYK JOAQUIM DOS SANTOS", local: "Sala 208 - FCT" },
+                            "14:00 - 14:50": { code: "IME0356", name: "CÁLCULO 2A", teacher: "MAYK JOAQUIM DOS SANTOS", local: "Sala 208 - FCT" },
+                            "14:50 - 15:40": { code: "IFI0203", name: "FÍSICA I", teacher: "DANIEL LOPO DA SILVA", local: "Sala 504" },
+                            "16:00 - 16:50": { code: "IFI0203", name: "FÍSICA I", teacher: "DANIEL LOPO DA SILVA", local: "Sala 504" }
                         }
                     }
                 }
