@@ -114,6 +114,13 @@ A interface deve transmitir clareza, precisão acadêmica, modernidade e facilid
   - Estados: Verde Esmeralda (Livre), Âmbar (Parcial), Vermelho/Cinza (Ocupado)
 - **Hierarquia visual:** Tipografia clara (Outfit / Inter / sans-serif), cartões bem delimitados, bordas sutis e sombras suaves.
 
+### 7.1. PROIBIÇÃO ABSOLUTA DE EMOTICONS / EMOJIS E OBRIGATORIEDADE DE ÍCONES INLINE
+- **Proibição:** É terminantemente proibido o uso de emoticons ou emojis gráficos do sistema operacional (ex.: 📅, 👥, 👤, 💡, 📊, 🖨️, 🗓️, 📚, ⏱️, 📌, ✨, 🟢, 🟡, 🔴, ⚠️, 👨‍🏫, 📍, etc.) em qualquer componente da interface (títulos, botões, cards, filtros, tabelas, modais, badges, alertas ou mensagens dinâmicas).
+- **Obrigatoriedade de Ícones Inline:** Todos os elementos visuais representativos devem ser obrigatoriamente implementados como **ícones inline em SVG** (vetoriais, autocontidos, leves e sem dependência de CDNs ou bibliotecas externas de fontes de ícones) ou com elementos semânticos CSS (como classes `.status-dot`).
+- **Padrão Técnico dos Ícones SVG:**
+  - Traçado limpo: `viewBox="0 0 24 24"`, `fill="none"`, `stroke="currentColor"`, `stroke-width="2"` (ou `2.2`), `stroke-linecap="round"`, `stroke-linejoin="round"`;
+  - Alinhamento uniforme: uso da classe utilitária `.ui-icon` para centralização e alinhamento vertical com a linha de base do texto (`vertical-align: -0.18em`).
+
 ---
 
 ## 8. SISTEMA DE VERSIONAMENTO
@@ -121,7 +128,7 @@ A interface deve transmitir clareza, precisão acadêmica, modernidade e facilid
 A versão deverá seguir obrigatoriamente o formato:
 `v.X.Y.Z`
 
-Exemplo: `v.1.1.0`
+Exemplo: `v.1.1.1`
 
 A versão deverá estar visível:
 1. No rodapé de todas as páginas da aplicação (`<span id="appVersion">v.X.Y.Z</span>`);

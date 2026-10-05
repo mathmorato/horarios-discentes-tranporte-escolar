@@ -36,7 +36,15 @@
   <!-- Main Content Wrapper -->
   <main class="main-wrapper">
     <div class="page-header">
-      <h1 class="page-title">📅 Agendamento Dinâmico de Reuniões</h1>
+      <h1 class="page-title" style="display: flex; align-items: center; gap: 0.5rem;">
+        <svg class="ui-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--ufg-blue);">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <span>Agendamento Dinâmico de Reuniões</span>
+      </h1>
       <p class="page-subtitle">
         Selecione os alunos participantes e filtre o horário para identificar janelas de disponibilidade em comum.
       </p>
@@ -48,7 +56,15 @@
       <div class="panel-card" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
         <div>
           <div class="panel-title" style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
-            <span style="font-weight: 700; color: var(--dark-navy);">👥 Selecionar Alunos</span>
+            <span style="font-weight: 700; color: var(--dark-navy); display: inline-flex; align-items: center; gap: 0.4rem;">
+              <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--ufg-blue);">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              Selecionar Alunos
+            </span>
             
             <!-- Badge Centralizado na Região Superior -->
             <span id="selectedCountBadge" style="font-size: 0.8rem; font-weight: 700; color: var(--ufg-blue); background: var(--ufg-blue-light); padding: 0.25rem 0.75rem; border-radius: var(--radius-full);">
@@ -83,7 +99,13 @@
             <!-- Duração da Reunião (Presets + Campo Customizado de Minutos) -->
             <div class="filter-group">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem; flex-wrap: wrap; gap: 0.4rem;">
-                <span class="filter-group-title" style="margin-bottom: 0;">⏱️ Duração da Reunião:</span>
+                <span class="filter-group-title" style="margin-bottom: 0; display: inline-flex; align-items: center; gap: 0.35rem;">
+                  <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--dark-navy);">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  Duração da Reunião:
+                </span>
                 <div class="duration-stepper-box" title="Ajuste fino da duração em minutos">
                   <button type="button" class="duration-step-btn" onclick="stepDuration(-15)" title="Diminuir 15 min" aria-label="Diminuir 15 minutos">−</button>
                   <input type="number" id="meetingDurationInput" min="15" max="360" step="5" value="60" oninput="onCustomDurationInput(this.value)" onchange="onCustomDurationChange(this.value)" aria-label="Duração em minutos">
@@ -146,7 +168,14 @@
     <section style="margin-top: 1.25rem;">
       <!-- Meeting Suggestions Section -->
       <div class="panel-card">
-        <h3 class="panel-title">💡 Melhores Opções de Horário Sugeridas</h3>
+        <h3 class="panel-title" style="display: flex; align-items: center; gap: 0.45rem;">
+          <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--cecate-yellow-hover);">
+            <path d="M9 18h6"></path>
+            <path d="M10 22h4"></path>
+            <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path>
+          </svg>
+          Melhores Opções de Horário Sugeridas
+        </h3>
         <div id="suggestionsContainer" class="suggestions-grid">
           <!-- Dynamic suggestion cards rendered here -->
         </div>
@@ -154,7 +183,14 @@
 
       <!-- Overlap Heatmap Grid -->
       <div class="panel-card">
-        <h3 class="panel-title">📊 Matriz de Disponibilidade Semanal (Heatmap)</h3>
+        <h3 class="panel-title" style="display: flex; align-items: center; gap: 0.45rem;">
+          <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--ufg-blue);">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          Matriz de Disponibilidade Semanal (Heatmap)
+        </h3>
         <div class="schedule-table-wrapper">
           <table class="schedule-table" id="heatmapTable">
             <thead>
@@ -184,7 +220,7 @@
       </div>
       <p>Projeto: Fortalecendo e Aprimorando as Políticas Públicas de Transporte Escolar do Brasil</p>
       <p style="font-size: 0.78rem; color: var(--text-muted);">Universidade Federal de Goiás - Campus Aparecida de Goiânia</p>
-      <div class="version-tag">Versão <span id="appVersion">v.1.1.0</span></div>
+      <div class="version-tag">Versão <span id="appVersion">v.1.1.1</span></div>
     </div>
   </footer>
 
@@ -348,13 +384,13 @@
 
           if (freeCount === total) {
             cellClass = "slot-overlap-full";
-            label = `🟢 100% Livre (${freeCount}/${total})`;
+            label = `<span class="status-dot dot-full"></span>100% Livre (${freeCount}/${total})`;
           } else if (freeCount > 0) {
             cellClass = "slot-overlap-partial";
-            label = `🟡 ${freeCount}/${total} Livres`;
+            label = `<span class="status-dot dot-partial"></span>${freeCount}/${total} Livres`;
           } else {
             cellClass = "slot-overlap-none";
-            label = `🔴 0/${total}`;
+            label = `<span class="status-dot dot-none"></span>0/${total}`;
           }
 
           const tooltip = busyStudents.length > 0 ? `Ocupados: ${busyStudents.join(', ')}` : "Todos livres!";
@@ -378,9 +414,15 @@
       if (suggestions.length === 0) {
         suggestionsContainer.innerHTML = `
           <div style="background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; padding: 1.15rem; border-radius: var(--radius-md); grid-column: 1 / -1; line-height: 1.5;">
-            ⚠️ Não foi encontrado nenhum horário 100% livre simultâneo com duração mínima de <strong>${Database.formatDuration(duration)}</strong> para os discentes selecionados neste turno (${shiftFilter === "ALL" ? "Todos os Turnos" : shiftFilter === "MANHA" ? "Manhã" : "Tarde"}).
-            <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #78350F;">
-              💡 <strong>Dica:</strong> Experimente reduzir a duração da reunião (ex: 30 ou 45 min) ou ajustar a seleção de discentes no painel acima.
+            <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
+              <svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: #D97706; margin-top: 0.15rem;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+              <div>
+                Não foi encontrado nenhum horário 100% livre simultâneo com duração mínima de <strong>${Database.formatDuration(duration)}</strong> para os discentes selecionados neste turno (${shiftFilter === "ALL" ? "Todos os Turnos" : shiftFilter === "MANHA" ? "Manhã" : "Tarde"}).
+                <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #78350F; display: flex; align-items: center; gap: 0.35rem;">
+                  <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>
+                  <span><strong>Dica:</strong> Experimente reduzir a duração da reunião (ex: 30 ou 45 min) ou ajustar a seleção de discentes no painel acima.</span>
+                </div>
+              </div>
             </div>
           </div>
         `;
@@ -392,14 +434,16 @@
           let windowFlexText = "";
           if (s.windowDuration > duration) {
             windowFlexText = `
-              <div style="font-size: 0.76rem; color: #047857; margin-top: 0.25rem;">
-                📌 <strong>Janela livre total:</strong> ${s.windowStart} às ${s.windowEnd} (${Database.formatDuration(s.windowDuration)} livres)
+              <div style="font-size: 0.76rem; color: #047857; margin-top: 0.25rem; display: flex; align-items: center; gap: 0.3rem;">
+                <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span><strong>Janela livre total:</strong> ${s.windowStart} às ${s.windowEnd} (${Database.formatDuration(s.windowDuration)} livres)</span>
               </div>
             `;
           } else {
             windowFlexText = `
-              <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 0.25rem;">
-                📌 <strong>Janela livre:</strong> ${s.windowStart} às ${s.windowEnd}
+              <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 0.25rem; display: flex; align-items: center; gap: 0.3rem;">
+                <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span><strong>Janela livre:</strong> ${s.windowStart} às ${s.windowEnd}</span>
               </div>
             `;
           }
@@ -408,15 +452,19 @@
             <div>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
                 <span class="suggestion-time">${s.day}</span>
-                <span style="font-size: 0.75rem; font-weight: 700; color: #065F46; background: #D1FAE5; padding: 0.15rem 0.5rem; border-radius: var(--radius-full);">
-                  ⏱️ ${Database.formatDuration(duration)}
+                <span style="font-size: 0.75rem; font-weight: 700; color: #065F46; background: #D1FAE5; padding: 0.15rem 0.5rem; border-radius: var(--radius-full); display: inline-flex; align-items: center; gap: 0.25rem;">
+                  <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  ${Database.formatDuration(duration)}
                 </span>
               </div>
               <div style="font-weight: 800; color: var(--ufg-blue); font-size: 1.15rem; letter-spacing: -0.02em;">
                 ${s.startTime} - ${s.endTime}
               </div>
               ${windowFlexText}
-              <div class="suggestion-meta" style="margin-top: 0.35rem;">✨ Todos os ${selectedStudents.length} alunos livres</div>
+              <div class="suggestion-meta" style="margin-top: 0.35rem; display: inline-flex; align-items: center; gap: 0.3rem;">
+                <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Todos os ${selectedStudents.length} alunos livres
+              </div>
             </div>
           `;
           suggestionsContainer.appendChild(card);

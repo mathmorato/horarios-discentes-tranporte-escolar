@@ -4,7 +4,7 @@
  * Permite inserção simples de novos semestres (ex: 2027.1) e consulta dinâmica.
  */
 
-const CECATE_VERSION = "v.1.1.0";
+const CECATE_VERSION = "v.1.1.1";
 const APP_VERSION = CECATE_VERSION;
 
 const Database = {

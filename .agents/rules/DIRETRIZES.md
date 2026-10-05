@@ -17,12 +17,17 @@ Execute diretamente as alterações necessárias sem pedir autorização prévia
 - `data.js`: Base de dados e motor modular de semestres e cruzamento de horários;
 - `styles.css`: Design System responsivo UFG/CECATE.
 
-## 3. Sistema de Versionamento
+## 3. Proibição de Emoticons / Emojis e Obrigação de Ícones Inline
+- **Proibição Absoluta:** É terminantemente proibido o uso de emoticons ou emojis gráficos (ex.: 📅, 👥, 👤, 💡, 📊, 🖨️, 🗓️, 📚, ⏱️, 📌, ✨, 🟢, 🟡, 🔴, ⚠️, 👨‍🏫, 📍, etc.) em qualquer componente visual, botão, título, tabela ou mensagem.
+- **Ícones Inline Obrigatórios:** Todos os ícones devem ser vetoriais inline em SVG (traço limpo `stroke="currentColor"`, `stroke-width="2"`, sem dependências de CDNs/fontes externas) ou indicadores semânticos CSS (`.status-dot`).
+
+## 4. Sistema de Versionamento
 - Formato obrigatório: `v.X.Y.Z`
 - Ordem de incremento: $Z \rightarrow Y \rightarrow X$ (Z de 0 a 9, depois Y de 0 a 9, depois X).
 - Manter visível no rodapé das páginas (`#appVersion`) e na constante central `const APP_VERSION = "v.X.Y.Z";` em `data.js`.
 
-## 4. Git e Commits
+## 5. Git e Commits
 - Commit obrigatório: `v.X.Y.Z: descrição objetiva`
 - Push para `main`
 - Relatório final rigorosamente no formato de 5 seções: Versão, Alterações realizadas, Arquivos principais alterados, Validação funcional e Git.
+
