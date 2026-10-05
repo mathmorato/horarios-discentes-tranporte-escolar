@@ -128,7 +128,7 @@ A interface deve transmitir clareza, precisão acadêmica, modernidade e facilid
 A versão deverá seguir obrigatoriamente o formato:
 `v.X.Y.Z`
 
-Exemplo: `v.1.1.1`
+Exemplo: `v.1.1.2`
 
 A versão deverá estar visível:
 1. No rodapé de todas as páginas da aplicação (`<span id="appVersion">v.X.Y.Z</span>`);

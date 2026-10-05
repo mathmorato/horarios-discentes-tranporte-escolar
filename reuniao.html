@@ -106,11 +106,11 @@
                   </svg>
                   Duração da Reunião:
                 </span>
-                <div class="duration-stepper-box" title="Ajuste fino da duração em minutos">
-                  <button type="button" class="duration-step-btn" onclick="stepDuration(-15)" title="Diminuir 15 min" aria-label="Diminuir 15 minutos">−</button>
-                  <input type="number" id="meetingDurationInput" min="15" max="360" step="5" value="60" oninput="onCustomDurationInput(this.value)" onchange="onCustomDurationChange(this.value)" aria-label="Duração em minutos">
+                <div class="duration-stepper-box" title="Ajuste fino da duração de 5 em 5 minutos">
+                  <button type="button" class="duration-step-btn" onclick="stepDuration(-5)" title="Diminuir 5 min" aria-label="Diminuir 5 minutos">−</button>
+                  <input type="number" id="meetingDurationInput" min="5" max="360" step="5" value="60" oninput="onCustomDurationInput(this.value)" onchange="onCustomDurationChange(this.value)" aria-label="Duração em minutos">
                   <span class="duration-unit">min</span>
-                  <button type="button" class="duration-step-btn" onclick="stepDuration(15)" title="Aumentar 15 min" aria-label="Aumentar 15 minutos">+</button>
+                  <button type="button" class="duration-step-btn" onclick="stepDuration(5)" title="Aumentar 5 min" aria-label="Aumentar 5 minutos">+</button>
                 </div>
               </div>
               <div class="radio-options-row">
@@ -220,7 +220,7 @@
       </div>
       <p>Projeto: Fortalecendo e Aprimorando as Políticas Públicas de Transporte Escolar do Brasil</p>
       <p style="font-size: 0.78rem; color: var(--text-muted);">Universidade Federal de Goiás - Campus Aparecida de Goiânia</p>
-      <div class="version-tag">Versão <span id="appVersion">v.1.1.1</span></div>
+      <div class="version-tag">Versão <span id="appVersion">v.1.1.2</span></div>
     </div>
   </footer>
 
@@ -290,15 +290,17 @@
     }
 
     function stepDuration(delta) {
-      let val = (currentDurationMinutes || 60) + delta;
-      if (val < 15) val = 15;
+      const cur = currentDurationMinutes || 60;
+      const base = Math.round(cur / 5) * 5;
+      let val = base + delta;
+      if (val < 5) val = 5;
       if (val > 360) val = 360;
       setDurationValue(val);
     }
 
     function onCustomDurationInput(val) {
       const parsed = parseInt(val);
-      if (!isNaN(parsed) && parsed >= 15 && parsed <= 360) {
+      if (!isNaN(parsed) && parsed >= 5 && parsed <= 360) {
         currentDurationMinutes = parsed;
         syncPresetRadios(parsed);
         updateAnalysis();
@@ -307,8 +309,10 @@
 
     function onCustomDurationChange(val) {
       let parsed = parseInt(val);
-      if (isNaN(parsed) || parsed < 15) parsed = 15;
+      if (isNaN(parsed) || parsed < 5) parsed = 5;
       if (parsed > 360) parsed = 360;
+      parsed = Math.round(parsed / 5) * 5;
+      if (parsed < 5) parsed = 5;
       setDurationValue(parsed);
     }
 
